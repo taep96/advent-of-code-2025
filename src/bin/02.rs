@@ -72,6 +72,7 @@ pub fn part_two(input: &str) -> Option<u64> {
                 pow10[i] = pow10[i - 1] * 10;
             }
 
+            let mut seen = std::collections::HashSet::new();
             let mut total = 0u64;
 
             for pattern_len in 1..=max_digits {
@@ -100,18 +101,17 @@ pub fn part_two(input: &str) -> Option<u64> {
                         max_pattern
                     };
 
-                    if lower_bound <= upper_bound {
-                        let count = upper_bound - lower_bound + 1;
-                        let series_sum = count * (lower_bound + upper_bound) / 2;
-                        total += series_sum * multiplier;
+                    for pattern in lower_bound..=upper_bound {
+                        let n = pattern * multiplier;
+                        if seen.insert(n) {
+                            total += n;
+                        }
                     }
                 }
             }
-
             total
         })
         .sum();
-
     Some(result)
 }
 
