@@ -1,26 +1,23 @@
 advent_of_code::solution!(1);
 
-fn parse_input(input: &str) -> Option<Vec<i64>> {
-    input
-        .lines()
-        .map(|line| {
-            let direction = line.chars().next()?;
-            let steps = line[1..].parse::<i64>().ok()?;
+fn parse_input(input: &str) -> impl Iterator<Item = i64> {
+    input.lines().filter_map(|line| {
+        let direction = line.chars().next()?;
+        let steps = line[1..].parse::<i64>().ok()?;
 
-            match direction {
-                'L' => Some(-steps),
-                'R' => Some(steps),
-                _ => None,
-            }
-        })
-        .collect()
+        match direction {
+            'L' => Some(-steps),
+            'R' => Some(steps),
+            _ => None,
+        }
+    })
 }
 
 pub fn part_one(input: &str) -> Option<u64> {
     let mut result = 0;
     let mut dial_pos: i64 = 50;
 
-    for delta in parse_input(input)? {
+    for delta in parse_input(input) {
         dial_pos = (dial_pos + delta).rem_euclid(100);
         result += (dial_pos == 0) as u64;
     }
@@ -32,7 +29,7 @@ pub fn part_two(input: &str) -> Option<u64> {
     let mut result = 0;
     let mut dial_pos: i64 = 50;
 
-    for delta in parse_input(input)? {
+    for delta in parse_input(input) {
         let offset = -((delta < 0) as i64);
         let next_pos = dial_pos + delta;
 
